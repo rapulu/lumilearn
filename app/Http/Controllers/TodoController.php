@@ -53,7 +53,6 @@ class TodoController extends Controller
             'user_id' => auth()->id()
         ]);
 
-        // Send websocket event
         event(new \App\Events\TodoItemCreated($item));
 
         return response()->json($item, 201);
