@@ -14,10 +14,10 @@ class TodoFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
+    public function definition()
     {
         return [
-            //
+            'title' => $this->faker->sentence(3),
         ];
     }
 }
