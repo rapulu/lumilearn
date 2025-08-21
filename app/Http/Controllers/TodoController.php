@@ -6,6 +6,7 @@ use App\Models\Todo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TodoController extends Controller
 {
@@ -15,14 +16,21 @@ class TodoController extends Controller
         return auth()->user()->todos()->with('items.user')->get();
     }
 
-    public function store(Request $request)
+    public function show(Todo $todo): JsonResponse
+    {
+        $todo->load('items.user');
+
+        return response()->json($todo);
+    }
+
+    public function store(Request $request): JsonResponse
     {
         $todo = auth()->user()->todos()->create($request->validate(['title' => 'required|string']));
         return response()->json($todo, 201);
     }
 
     // Endpoint to invite a user by username
-    public function invite(Request $request, Todo $todo)
+    public function invite(Request $request, Todo $todo): JsonResponse
     {
         Gate::authorize('manage-todolist', $todo);
 
@@ -34,7 +42,7 @@ class TodoController extends Controller
     }
 
     // Endpoint for adding an item
-    public function addItem(Request $request, Todo $todo)
+    public function addItem(Request $request, Todo $todo): JsonResponse
     {
         if (!$todo->members()->where('user_id', auth()->id())->exists()) {
             return response()->json(['message' => 'You are not a member of this todo list.'], 403);
