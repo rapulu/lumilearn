@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Http\Request;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -52,8 +54,9 @@ class User extends Authenticatable
     /**
      * Get the todos for the user.
      */
-    public function todos()
+    public function todos(): BelongsToMany
     {
-        return $this->hasMany(Todo::class);
+        return $this->belongsToMany(Todo::class);
     }
+
 }
